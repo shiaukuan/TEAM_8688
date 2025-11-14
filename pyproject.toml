@@ -1,0 +1,18 @@
+[project]
+name = "team-8688"
+version = "0.1.0"
+description = "T-Brain 2025 玉山銀行警示帳戶預測競賽"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "autogluon.tabular>=1.0.0",
+    "matplotlib>=3.7.0",
+    "typing-extensions>=4.15.0",
+    "lightgbm>=4.6.0",
+    "xgboost>=3.1.1",
+    "catboost>=1.2.8",
+    "torch",
+    "torchvision",
+    "torchaudio",
+]

@@ -1,3 +1,6 @@
-data/
-datas/
+data/*.csv
+datas/*.csv
+train/*.csv
 *.csv
+
+autogluon_models/

@@ -33,7 +33,7 @@ print(f"  - label=0: {(features_df['label']==0).sum()}")
 
 # 載入原始交易資料以計算交易筆數
 print("\n[2/6] 計算每個帳戶的交易筆數...")
-df_train = pd.read_csv('../train/all_acct_transactions.csv')
+df_train = pd.read_csv('train/all_acct_transactions.csv')
 txn_counts = df_train.groupby('acct').size().reset_index(name='txn_count')
 print(f"交易資料筆數: {len(df_train):,}")
 

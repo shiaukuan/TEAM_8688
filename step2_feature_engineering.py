@@ -1045,13 +1045,13 @@ def calculate_time_variance_features(acct_df):
 # 載入資料
 # ============================================================================
 print("\n[1/8] 載入資料...")
-df = pd.read_csv('../train/all_acct_transactions.csv')
+df = pd.read_csv('train/all_acct_transactions.csv')
 print(f"總筆數: {len(df):,}")
 print(f"總帳戶數: {df['acct'].nunique()}")
 
 # 載入需要修正的 label
 print("\n[2/8] 修正 label...")
-new_label_1 = pd.read_csv('../train/new_label_1.csv')
+new_label_1 = pd.read_csv('train/new_label_1.csv')
 new_label_1_accts = set(new_label_1['acct'].values)
 
 print(f"需要修正的帳戶數: {len(new_label_1_accts)}")
