@@ -17,7 +17,7 @@ print("=" * 80)
 # 1. 載入特徵資料
 # ============================================================================
 print("\n[1/4] 載入特徵資料...")
-features_df = pd.read_csv('features.csv')
+features_df = pd.read_csv('../features.csv')
 print(f"總帳戶數: {len(features_df)}")
 print(f"  - label=1: {(features_df['label']==1).sum()}")
 print(f"  - label=0: {(features_df['label']==0).sum()}")
@@ -30,8 +30,8 @@ true_labels.columns = ['acct', 'true_label']
 # 2. 載入訓練好的模型
 # ============================================================================
 print("\n[2/4] 載入訓練好的模型...")
-predictor = TabularPredictor.load('./autogluon_models')
-print(f"模型路徑: ./autogluon_models")
+predictor = TabularPredictor.load('../autogluon_models')
+print(f"模型路徑: ../autogluon_models")
 
 # ============================================================================
 # 3. 準備預測資料
@@ -110,5 +110,5 @@ print(f"  中位數: {results['proba'].median():.4f}")
 # 5. 儲存結果
 # ============================================================================
 print("\n儲存預測結果...")
-results.to_csv('all_predictions.csv', index=False, encoding='utf-8-sig')
-print("[OK] 已保存: all_predictions.csv")
+results.to_csv('../all_predictions.csv', index=False, encoding='utf-8-sig')
+print("[OK] 已保存: ../all_predictions.csv")

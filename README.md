@@ -35,6 +35,50 @@
 
 ---
 
+## 環境設置
+
+### 套件安裝
+
+本專案提供兩種套件管理方式：
+
+#### 方法一：使用 uv（推薦，速度較快）
+
+```bash
+# 安裝所有相依套件
+uv sync
+```
+
+#### 方法二：使用 pip + requirements.txt
+
+```bash
+# 使用 pip 安裝
+pip install -r requirements.txt
+
+# 或使用 uv pip（更快）
+uv pip install -r requirements.txt
+```
+
+### 主要套件版本
+
+| 套件類別 | 套件名稱 | 版本 |
+|---------|---------|------|
+| 資料處理 | pandas | 2.3.3 |
+|  | numpy | 1.26.4 |
+|  | scikit-learn | 1.5.0 |
+| AutoML | autogluon | 1.4.0 |
+| 梯度提升 | lightgbm | 4.6.0 |
+|  | xgboost | 2.1.1 |
+|  | catboost | 1.2.7 |
+| 深度學習 | torch | 2.7.0 |
+|  | torchvision | 0.22.0 |
+| 視覺化 | matplotlib | 3.9.2 |
+
+### Python 版本要求
+
+- Python >= 3.12
+
+---
+
 ## 建模流程
 
 整個專案採用**六步驟管線流程**，實現從原始資料到最終預測的完整pipeline：
@@ -561,19 +605,29 @@ acct,label
 
 ## 執行指令
 
-按順序執行以下程式：
+### 快速開始
+
+專案已重新組織為 **Preprocess（前處理）** 和 **Model（模型）** 兩個資料夾，按順序執行以下程式：
+
+#### 第一階段：資料前處理（Preprocess 資料夾）
 
 ```bash
 # Step 0: 簡化帳戶編號
+cd Preprocess
 python step0_short_acct.py
 
 # Step 1: 處理交易資料
 python step1_process_acct_transactions.py
 
-# Step 2: 特徵工程
+# Step 2: 特徵工程（約需 5-10 分鐘）
 python step2_feature_engineering.py
+```
 
-# Step 3: 訓練模型
+#### 第二階段：模型訓練與預測（Model 資料夾）
+
+```bash
+# Step 3: 訓練模型（約需 1 小時）
+cd ../Model
 python step3_train_autogluon.py
 
 # Step 4: 預測所有帳戶
@@ -583,7 +637,27 @@ python step4_predict_all_accounts.py
 python step5_answer.py
 ```
 
+#### 一鍵執行（從專案根目錄）
+
+```bash
+# 完整流程一次執行
+cd Preprocess && \
+python step0_short_acct.py && \
+python step1_process_acct_transactions.py && \
+python step2_feature_engineering.py && \
+cd ../Model && \
+python step3_train_autogluon.py && \
+python step4_predict_all_accounts.py && \
+python step5_answer.py && \
+cd ..
+```
+
 **最終輸出**：`submit.csv`（可直接提交至競賽平台）
+
+**注意事項**：
+- 所有程式都已經配置好相對路徑，可在各自資料夾內直接執行
+- Step 2 和 Step 3 較耗時，請耐心等待
+- 產生的中間檔案都會儲存在專案根目錄
 
 ---
 
@@ -591,6 +665,17 @@ python step5_answer.py
 
 ```
 /home/rapids/notebooks/sk/TEAM_8688/
+│
+├── Preprocess/                    # 資料前處理程式
+│   ├── step0_short_acct.py        # 簡化帳戶編號
+│   ├── step1_process_acct_transactions.py  # 處理交易資料
+│   └── step2_feature_engineering.py  # 特徵工程（V8-V14）
+│
+├── Model/                         # 模型訓練與預測程式
+│   ├── step3_train_autogluon.py   # AutoGluon 訓練
+│   ├── step4_predict_all_accounts.py  # 預測所有帳戶
+│   └── step5_answer.py            # 產生提交檔案
+│
 ├── data/                          # 原始資料（勿修改）
 │   ├── acct_transaction.csv       # 443萬筆交易記錄
 │   ├── acct_alert.csv             # 1,004個警示帳戶
@@ -605,25 +690,34 @@ python step5_answer.py
 │   ├── all_acct_transactions.csv  # 所有帳戶交易（Step 1輸出）
 │   └── new_label_1.csv            # 42個高機率警示帳戶（label修正用）
 │
+├── autogluon_models/              # AutoGluon模型目錄（Step 3輸出）
+│
 ├── features.csv                   # 特徵檔案（Step 2輸出）
 ├── all_predictions.csv            # 預測結果（Step 4輸出）
 ├── submit.csv                     # 最終提交檔案（Step 5輸出）
-│
-├── autogluon_models/              # AutoGluon模型目錄（Step 3輸出）
-│
-├── step0_short_acct.py
-├── step1_process_acct_transactions.py
-├── step2_feature_engineering.py
-├── step3_train_autogluon.py
-├── step4_predict_all_accounts.py
-├── step5_answer.py
 │
 ├── info/
 │   └── datainfo.md                # 資料詳細說明
 │
 ├── CLAUDE.md                      # Claude Code 專案指引
-└── README.md                      # 本說明文件
+├── README.md                      # 本說明文件
+│
+└── (舊版程式檔案已整理至 Preprocess/ 和 Model/)
 ```
+
+### 資料夾說明
+
+#### `Preprocess/` - 資料前處理
+包含 Step 0-2 的前處理程式：
+- 帳戶編號簡化
+- 交易資料合併與標記
+- 特徵工程（140+ 個特徵）
+
+#### `Model/` - 模型建模
+包含 Step 3-5 的建模程式：
+- AutoGluon 模型訓練
+- 全帳戶預測
+- 提交檔案生成
 
 ---
 

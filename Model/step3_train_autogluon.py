@@ -24,7 +24,7 @@ print("=" * 80)
 # 1. 載入資料與特徵
 # ============================================================================
 print("\n[1/6] 載入 特徵...")
-features_df = pd.read_csv('features.csv')
+features_df = pd.read_csv('../features.csv')
 
 print(f"特徵數: {len(features_df.columns) - 2}")
 print(f"帳戶數: {len(features_df)}")
@@ -33,7 +33,7 @@ print(f"  - label=0: {(features_df['label']==0).sum()}")
 
 # 載入原始交易資料以計算交易筆數
 print("\n[2/6] 計算每個帳戶的交易筆數...")
-df_train = pd.read_csv('train/all_acct_transactions.csv')
+df_train = pd.read_csv('../train/all_acct_transactions.csv')
 txn_counts = df_train.groupby('acct').size().reset_index(name='txn_count')
 print(f"交易資料筆數: {len(df_train):,}")
 
@@ -161,7 +161,7 @@ predictor = TabularPredictor(
     label='label',
     problem_type='binary',
     eval_metric='f1',  # 使用 F1 作為評估指標
-    path='./autogluon_models',
+    path='../autogluon_models',
     verbosity=2
 )
 

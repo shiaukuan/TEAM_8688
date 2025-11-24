@@ -4,20 +4,35 @@
 import pandas as pd
 from pathlib import Path
 
-# 定義路徑
-BASE_DIR = Path(__file__).parent
+# 定義路徑（從 Preprocess 目錄出發）
+BASE_DIR = Path(__file__).parent.parent  # 回到專案根目錄
 DATA_DIR = BASE_DIR / 'datas'
+TRAIN_DIR = BASE_DIR / 'train'
+
+# 確保 train 目錄存在
+TRAIN_DIR.mkdir(exist_ok=True)
+
+print("=" * 80)
+print("Step 1: 處理帳戶交易資料")
+print("=" * 80)
 
 # 讀取資料
+print("\n讀取資料中...")
 acct_alert = pd.read_csv(DATA_DIR / 'acct_alert.csv')
 acct_predict = pd.read_csv(DATA_DIR / 'acct_predict.csv')
 acct_transaction = pd.read_csv(DATA_DIR / 'acct_transaction.csv')
+
+print(f"  - 警示帳戶: {len(acct_alert):,} 筆")
+print(f"  - 待預測帳戶: {len(acct_predict):,} 筆")
+print(f"  - 交易記錄: {len(acct_transaction):,} 筆")
 
 # 合併所有需要處理的帳戶
 all_accts = pd.concat([
     acct_alert[['acct']].assign(label=1),
     acct_predict[['acct', 'label']]
 ], ignore_index=True)
+
+print(f"\n總共需要處理 {len(all_accts):,} 個帳戶")
 
 # 添加 hour 欄位到交易資料
 acct_transaction['hour'] = acct_transaction['txn_time'].str.split(':').str[0].astype(int)
@@ -72,4 +87,12 @@ for idx, row in all_accts.iterrows():
 # 合併所有交易記錄為一個大檔案
 if all_transactions:
     merged_transactions = pd.concat(all_transactions, ignore_index=True)
-    merged_transactions.to_csv(BASE_DIR / 'train/all_acct_transactions.csv', index=False)
+    merged_transactions.to_csv(TRAIN_DIR / 'all_acct_transactions.csv', index=False)
+    print(f"\n" + "=" * 80)
+    print("[完成] 交易資料處理完成")
+    print("=" * 80)
+    print(f"  總交易筆數: {len(merged_transactions):,}")
+    print(f"  總帳戶數: {merged_transactions['acct'].nunique()}")
+    print(f"  儲存位置: train/all_acct_transactions.csv")
+else:
+    print("\n[錯誤] 沒有交易記錄可以處理")
